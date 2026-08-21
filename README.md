@@ -1,6 +1,6 @@
 # SKALA Vue 실습 과제
 
-SKALA Vue 강의의 실습 과제 저장소입니다. 과제 1부터 종합실습 7까지 같은 날씨 앱을 이어서 고쳐 왔고,
+SKALA Vue 강의의 실습 과제 저장소입니다. 과제 1부터 종합실습 8까지 같은 날씨 앱을 이어서 고쳐 왔고,
 과제별 결과물을 지우지 않고 한 화면에 쌓아 두어 무엇이 어떻게 바뀌었는지 비교할 수 있게 했습니다.
 
 ## 실행 방법
@@ -15,16 +15,33 @@ npm run dev
 
 | 페이지 | 주소 | 내용 |
 | --- | --- | --- |
-| **실습 과제** | **http://localhost:5173/** | 과제 결과물 (과제 1 ~ 종합실습 7) |
+| **실습 과제** | **http://localhost:5173/** | 과제 결과물 (과제 1 ~ 종합실습 8) |
 | 강의 예제 | http://localhost:5173/practice.html | 수업 중 따라 친 문법 예제 |
 
-종합실습 6부터 외부 API를 호출합니다. 키가 없어도 화면은 뜹니다 — 통신에 실패하면
-[`weatherStore.js`](src/stores/weatherStore.js)가 과제 1의 Mock 데이터로 되돌리고 배너를 띄우기 때문입니다.
-다만 실시간 기온과 5일 예보·대기질은 그때 보이지 않으므로, 그대로 보시려면 위 배포 주소를 쓰시면 됩니다.
+---
 
-Vite는 `VITE_` 접두사가 붙은 변수만 클라이언트에 노출하고, 이 값은 빌드 결과물에 문자열 그대로 박힙니다.
-브라우저까지 내려가는 값이라 저장소에는 [`.env.example`](.env.example)만 두고 키 자체는 올리지 않았습니다.
-실서비스 비밀키라면 여기서 한 단계 더 나아가 서버를 거쳐야 합니다.
+## 사용한 API
+
+전부 종합실습 6에서 붙였습니다. 호출부는 [`src/api/`](src/api/)에 있습니다.
+
+| API | 엔드포인트 | 키 |
+| --- | --- | --- |
+| **OpenWeatherMap** — 현재 날씨 · 5일 예보 · 대기 오염 | `/data/2.5/weather` · `/forecast` · `/air_pollution` | 필요 |
+| **Open-Meteo** — 자외선 · 강수확률 | `/v1/forecast` | 불필요 |
+
+OpenWeatherMap 무료 플랜에 자외선 지수가 없어 Open-Meteo를 함께 씁니다.
+
+---
+
+## 사용한 라이브러리
+
+| 라이브러리 | 도입 시점 | 쓴 곳 |
+| --- | --- | --- |
+| [Vue](https://vuejs.org) 3 | 과제 1 | Composition API · `<script setup>` |
+| [Vue Router](https://router.vuejs.org) | 과제 4 | [`router/exercise.js`](src/router/exercise.js) |
+| [Pinia](https://pinia.vuejs.org) | 종합실습 5 | [`src/stores/`](src/stores/) — config · favorite · compare · weather |
+| [Axios](https://axios-http.com) | 종합실습 6 | [`src/api/`](src/api/) — 인스턴스에 공통 설정 |
+| [Naive UI](https://www.naiveui.com) | 종합실습 7 | [`plugins/naive.js`](src/plugins/naive.js) — CSS-in-JS라 전역 CSS와 안 부딪힘 |
 
 ---
 
@@ -92,7 +109,7 @@ Vite는 `VITE_` 접두사가 붙은 변수만 클라이언트에 노출하고, �
 
 ## 요구사항 충족 현황
 
-과제별 hands-on 요구사항 34개입니다. 항목 뒤는 그 결과가 보이는 화면이나 코드입니다.
+과제별 hands-on 요구사항 34개와 배포 항목입니다.
 
 ### 과제 1 (Mockup)
 
@@ -151,6 +168,12 @@ Vite는 `VITE_` 접두사가 붙은 변수만 클라이언트에 노출하고, �
 
 종합실습 7의 요구사항 4개 중 3개가 종합실습 6에서 이미 끝나 있어서, 기능이 아니라 표현 계층만 바꿨습니다.
 
+### 종합실습 8 (Deployment)
+
+- [x] 빌드 결과물 배포 → **https://skala-vue-ruddy.vercel.app**
+- [x] SPA 새로고침 404 차단 → [`vercel.json`](vercel.json)의 rewrite
+- [x] API 키를 저장소가 아닌 배포 환경변수로 주입 → [종합실습 8](#종합실습-8--날씨-deployment)
+
 ---
 
 ## 추가로 구현한 것
@@ -172,17 +195,19 @@ Vite는 `VITE_` 접두사가 붙은 변수만 클라이언트에 노출하고, �
 
 ## 막혔던 것
 
-| 과제 | 증상 | 원인과 해결 |
-| --- | --- | --- |
-| 3 | 클래스는 붙는데 카드 색이 안 칠해짐 | 판정은 부모에, CSS는 자식 `scoped`에 있었음 → 판정 로직도 자식으로 이전 ([자세히](#과제-3--날씨-component)) |
-| 4 | 블록을 복제하니 같은 화면이 두 번 렌더 | `<RouterView>`는 앱에 하나뿐 → 블록을 늘리지 않고 제목만 교체 ([자세히](#과제-4--날씨-router)) |
-| 4 | `/about`으로 직접 들어가면 404 | Vite dev의 History 폴백은 `index.html`에만 적용 → 과제를 `index.html`로, 강의 예제를 `practice.html`로 |
-| 5 | 화씨로 바꾸니 `25도 이상` 판정이 이상해짐 | 표시값과 판정 기준에 환산을 모두 적용 → 표시만 환산, 판정·게이지는 원본 섭씨 ([자세히](#종합실습-5--날씨-store)) |
-| 6 | 5일 예보가 6일로 나오고 밤 아이콘이 잡힘 | 응답의 `dt`가 UTC → `city.timezone`을 더해 한국 시각으로 ([자세히](#종합실습-6--날씨-axios)) |
-| 6 | 자외선 값이 없음 | OpenWeatherMap 무료 플랜 미제공 → Open-Meteo 추가 ([자세히](#종합실습-6--날씨-axios)) |
-| 6 | API로 바꾸니 카드 테마가 전부 풀림 | `status` 문자열이 Mock의 5종보다 다양 → 아이콘 코드로 판정 ([자세히](#종합실습-6--날씨-axios)) |
-| 7 | Naive UI 버튼에 회색 hover가 덮임 | 전역 `button:hover`(0,2,1)가 `.n-button`(0,2,0)을 이김 → 우리 쪽을 `:where()`로 감싸 특이도 0 ([자세히](#종합실습-7--날씨-ui-library)) |
-| 7 | `n-input`으로 바꾸니 한글 검색이 멈춤 | `n-input`이 조합 중 입력을 버림 → 검색창만 네이티브 `<input>` 유지 ([자세히](#종합실습-7--날씨-ui-library)) |
+| 증상 | 원인 | 해결 | 결과 |
+| --- | --- | --- | --- |
+| **3** 클래스는 붙는데 카드 색이 안 칠해짐 | 판정은 부모에, CSS는 자식 `scoped`에 | 판정 로직도 자식으로 이전 | 테마 5종 복구 |
+| **4** 같은 화면이 두 번 렌더 | `<RouterView>`는 앱에 하나뿐 | 블록을 늘리지 않고 제목만 교체 | 과제 1~3 블록 그대로 유지 |
+| **4** `/about` 직접 진입 시 404 | dev 서버 History 폴백이 `index.html`에만 걸림 | 과제를 `index.html`, 강의 예제를 `practice.html`로 분리 | 새로고침·직접 진입 모두 정상 |
+| **5** 화씨에서 `25도 이상` 판정이 어긋남 | 표시값과 판정 기준 양쪽에 환산을 적용 | 표시만 환산, 판정·게이지는 원본 섭씨 | 단위를 바꿔도 색·분류 고정 |
+| **6** 5일 예보가 6일로 나오고 밤 아이콘 | 응답의 `dt`가 UTC | `city.timezone`을 더해 한국 시각으로 | 5일 · 낮 아이콘 |
+| **6** 자외선 값이 없음 | OpenWeatherMap 무료 플랜 미제공 | Open-Meteo 병행 호출 | 게이지 유지 + 강수확률 확보 |
+| **6** 카드 테마가 전부 풀림 | `status` 문자열이 Mock의 5종보다 다양 | 아이콘 코드 앞 2자리로 판정 | Mock·API 화면 모두 동작 |
+| **7** Naive 버튼에 회색 hover가 덮임 | 전역 `button:hover`(0,2,1) > `.n-button`(0,2,0) | 우리 쪽을 `:where()`로 감싸 특이도 0 | `!important` 없이 공존 |
+| **7** 한글 검색이 멈춤 | `n-input`이 조합 중 입력을 버림 | 검색창만 네이티브 `<input>` 유지 | 과제 1의 요구사항 3 유지 |
+
+앞 숫자는 과제 번호입니다.
 
 ---
 
@@ -219,7 +244,7 @@ Vite는 `VITE_` 접두사가 붙은 변수만 클라이언트에 노출하고, �
 
 > [`src/components/exercise/WeatherComposition.vue`](src/components/exercise/WeatherComposition.vue)
 
-과제 1과 **같은 화면**을 Composition API로 다시 짰습니다. 데이터와 UI는 그대로 두고 상태를 다루는 방식만 바꿉니다.
+과제 1과 **같은 화면**을 Composition API로 다시 짰습니다.
 
 상태는 `searchQuery` `selectedCityInfo` `weatherList` 세 `ref`, 검색은 `filteredWeatherList` computed,
 결과 3분기는 `v-for="city in displayList"` + `v-if="resultCount === 0"`으로 처리했습니다.
@@ -598,7 +623,6 @@ const themeKey = computed(() => props.city.themeKey ?? THEME_BY_STATUS[props.cit
 > [`src/plugins/naive.js`](src/plugins/naive.js) · [`src/App.exercise.vue`](src/App.exercise.vue)
 
 요구사항 4개 중 3개가 종합실습 6에서 이미 끝나 있어서, 종합실습 7은 **표현 계층만 바꾸는 과제**가 됐습니다.
-바꿔 말하면 종합실습 6까지 쌓아 온 구조가 "UI만 갈아 끼울 수 있는가"를 검증받는 자리였습니다.
 
 **라이브러리 선정.**
 유명한 것이 아니라 **우리 화면에 이미 있는 요소와 1:1로 대응되는 컴포넌트가 있는가**로 골랐습니다.
@@ -676,11 +700,36 @@ Naive UI 톤의 스타일만 입혔습니다. → [GIF](docs/clips/search-ime.gi
 | 빈 상태 / 404 | 직접 만든 문구·카드 | `n-empty` / `n-result` |
 | 순간 피드백 | 없음 | `useMessage()` 토스트 |
 
-손대지 않은 쪽을 적는 편이 더 정확합니다.
 **API 통신(`src/api/`) · 상태(`src/stores/`) · 라우팅(`src/router/`) · 각 뷰의 `<script setup>`은 변경 없음**이고,
 바뀐 것은 각 파일의 `<template>`과 `<style>`뿐입니다(상세 뷰에 AQI 색 매핑 한 줄만 추가).
 `props` / `emits` 규격을 그대로 두었기 때문에 **과제 3 블록도 코드를 고치지 않고 함께 새 UI가 됐습니다.**
 → [과제 3 화면](#과제-1--과제-3-결과물)
+
+---
+
+## 종합실습 8 — 날씨 Deployment
+
+> [`vercel.json`](vercel.json) · [`vite.config.js`](vite.config.js)
+
+로컬에서만 돌던 결과물을 Vercel에 올려 주소로 열 수 있게 했습니다. → **https://skala-vue-ruddy.vercel.app**
+
+**과제 4의 404가 프로덕션에서 되살아납니다.**
+`/about`으로 직접 들어가면 정적 호스팅은 그 경로의 파일을 찾다가 404를 냅니다.
+라우팅은 브라우저에서 Vue Router가 하는 일이라 서버에는 그런 파일이 없습니다.
+과제 4에서 Vite dev 서버의 History 폴백으로 넘겼던 문제를, 배포에서는 rewrite로 같은 결론을 냅니다.
+
+```json
+{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+```
+
+모든 경로를 `index.html`로 돌려주고 그다음 판단은 라우터에 맡깁니다.
+→ [404 화면](docs/screenshots/notfound.png)은 이제 서버가 아니라 Catch-all 라우트가 그립니다.
+실제 파일이 있으면 rewrite보다 먼저 나가므로, 함께 빌드되는 `/practice.html`은 가로채이지 않습니다.
+
+**키는 저장소가 아니라 배포 환경변수로.**
+`VITE_OPENWEATHER_API_KEY`는 Vercel 프로젝트 설정에 넣고, 저장소에는 [`.env.example`](.env.example)만 둡니다.
+다만 `VITE_` 접두사가 붙은 값은 **빌드 결과물에 문자열로 박혀 브라우저까지 내려갑니다.**
+실서비스의 비밀키라면 이 방식으로는 부족하고 서버를 한 단계 거쳐야 합니다.
 
 ---
 
@@ -700,4 +749,7 @@ src/
     ├── exercise/WeatherComposition.vue   과제 2
     ├── exercise/weather/                 과제 3 부품 (과제 4~종합실습 7이 그대로 재사용)
     └── practices/                        강의 중 따라 친 문법 예제
+
+vite.config.js    진입점 2개(index.html / practice.html) 빌드 설정
+vercel.json       종합실습 8 — SPA rewrite
 ```
