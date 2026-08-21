@@ -1,0 +1,116 @@
+div.practice-container {
+  max-width: 1200px;
+  width: 800px;
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #2c3e50;
+  line-height: 1.6;
+}
+div.practice-section {
+  padding: 10px 20px 20px 20px;
+  margin-top: 10px;
+  margin-bottom: 24px;
+  background-color: #ffffff;
+  color: #2c3e50; /* 다크 모드에서도 흰 배경 위에 텍스트가 보이도록 고정 */
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+}
+h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a252f;
+  margin-top: 40px;
+  margin-bottom: 8px;
+}
+h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #34495e;
+  margin-top: 0px;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #ecf0f1;
+}
+h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+hr {
+  border: none;
+  height: 3px;
+  background: linear-gradient(to right, #42b883, #35495e);
+  border-radius: 2px;
+  margin-bottom: 14px;
+}
+
+/* :where()로 감싸 특이도를 0으로 낮춘다. 그대로 두면 태그 셀렉터가
+   Naive UI의 클래스 스타일을 이겨 라이브러리 버튼 위에 회색이 덮인다. */
+:where(button) {
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  background-color: #f1f3f5;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+:where(button:not(:disabled):hover) {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+  color: #212529;
+}
+:where(button:not(:disabled):active) {
+  background-color: #dee2e6;
+  border-color: #6c757d;
+}
+:where(button:disabled) {
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
+  color: #adb5bd;
+  cursor: not-allowed;
+
+  /* 호버·클릭 인터랙션 차단 */
+  pointer-events: none;
+  box-shadow: none;
+}
+:where(input) {
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #2c3e50;
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+:where(input:focus) {
+  border-color: #868e96;
+  box-shadow: 0 0 0 3px rgba(134, 142, 150, 0.15);
+}
+.btn-external {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #42b883;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.btn-external:hover {
+  background-color: #33a06f;
+}
+.btn-external:active {
+  background-color: #2c8a5f;
+}
