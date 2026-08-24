@@ -3,6 +3,13 @@
 SKALA Vue 강의의 실습 과제 저장소입니다. 과제 1부터 종합실습 8까지 같은 날씨 앱을 이어서 고쳐 왔고,
 과제별 결과물을 지우지 않고 한 화면에 쌓아 두어 무엇이 어떻게 바뀌었는지 비교할 수 있게 했습니다.
 
+**[실행 방법](#실행-방법)** · [사용한 API](#사용한-api) · [사용한 라이브러리](#사용한-라이브러리) · [화면](#화면)
+**[요구사항 충족 현황](#요구사항-충족-현황)** · [추가로 구현한 것](#추가로-구현한-것) · [막혔던 것](#막혔던-것)
+
+과제별 상세 —
+[1 Mockup](#과제-1--날씨-mockup) · [2 Composition](#과제-2--날씨-composition) · [3 Component](#과제-3--날씨-component) · [4 Router](#과제-4--날씨-router) ·
+[5 Store](#종합실습-5--날씨-store) · [6 Axios](#종합실습-6--날씨-axios) · [7 UI Library](#종합실습-7--날씨-ui-library) · [8 Deployment](#종합실습-8--날씨-deployment) · [폴더 구조](#폴더-구조)
+
 ## 실행 방법
 
 배포 주소: **https://skala-vue-ruddy.vercel.app**
@@ -197,23 +204,23 @@ OpenWeatherMap 무료 플랜에 자외선 지수가 없어 Open-Meteo를 함께 
 
 | 증상 | 원인 | 해결 | 결과 |
 | --- | --- | --- | --- |
-| **3** 클래스는 붙는데 카드 색이 안 칠해짐 | 판정은 부모에, CSS는 자식 `scoped`에 | 판정 로직도 자식으로 이전 | 테마 5종 복구 |
-| **4** 같은 화면이 두 번 렌더 | `<RouterView>`는 앱에 하나뿐 | 블록을 늘리지 않고 제목만 교체 | 과제 1–3 블록 그대로 유지 |
-| **4** `/about` 직접 진입 시 404 | dev 서버 History 폴백이 `index.html`에만 걸림 | 과제를 `index.html`, 강의 예제를 `practice.html`로 분리 | 새로고침·직접 진입 모두 정상 |
-| **5** 화씨에서 `25도 이상` 판정이 어긋남 | 표시값과 판정 기준 양쪽에 환산을 적용 | 표시만 환산, 판정·게이지는 원본 섭씨 | 단위를 바꿔도 색·분류 고정 |
-| **6** 5일 예보가 6일로 나오고 밤 아이콘 | 응답의 `dt`가 UTC | `city.timezone`을 더해 한국 시각으로 | 5일 · 낮 아이콘 |
-| **6** 자외선 값이 없음 | OpenWeatherMap 무료 플랜 미제공 | Open-Meteo 병행 호출 | 게이지 유지 + 강수확률 확보 |
-| **6** 카드 테마가 전부 풀림 | `status` 문자열이 Mock의 5종보다 다양 | 아이콘 코드 앞 2자리로 판정 | Mock·API 화면 모두 동작 |
-| **7** Naive 버튼에 회색 hover가 덮임 | 전역 `button:hover`(0,2,1) > `.n-button`(0,2,0) | 우리 쪽을 `:where()`로 감싸 특이도 0 | `!important` 없이 공존 |
-| **7** 한글 검색이 멈춤 | `n-input`이 조합 중 입력을 버림 | 검색창만 네이티브 `<input>` 유지 | 과제 1의 요구사항 3 유지 |
+| [**3**](#과제-3--날씨-component) 클래스는 붙는데 카드 색이 안 칠해짐 | 판정은 부모에, CSS는 자식 `scoped`에 | 판정 로직도 자식으로 이전 | 테마 5종 복구 |
+| [**4**](#과제-4--날씨-router) 같은 화면이 두 번 렌더 | `<RouterView>`는 앱에 하나뿐 | 블록을 늘리지 않고 제목만 교체 | 과제 1–3 블록 그대로 유지 |
+| [**4**](#과제-4--날씨-router) `/about` 직접 진입 시 404 | dev 서버 History 폴백이 `index.html`에만 걸림 | 과제를 `index.html`, 강의 예제를 `practice.html`로 분리 | 새로고침·직접 진입 모두 정상 |
+| [**5**](#종합실습-5--날씨-store) 화씨에서 `25도 이상` 판정이 어긋남 | 표시값과 판정 기준 양쪽에 환산을 적용 | 표시만 환산, 판정·게이지는 원본 섭씨 | 단위를 바꿔도 색·분류 고정 |
+| [**6**](#종합실습-6--날씨-axios) 5일 예보가 6일로 나오고 밤 아이콘 | 응답의 `dt`가 UTC | `city.timezone`을 더해 한국 시각으로 | 5일 · 낮 아이콘 |
+| [**6**](#종합실습-6--날씨-axios) 자외선 값이 없음 | OpenWeatherMap 무료 플랜 미제공 | Open-Meteo 병행 호출 | 게이지 유지 + 강수확률 확보 |
+| [**6**](#종합실습-6--날씨-axios) 카드 테마가 전부 풀림 | `status` 문자열이 Mock의 5종보다 다양 | 아이콘 코드 앞 2자리로 판정 | Mock·API 화면 모두 동작 |
+| [**7**](#종합실습-7--날씨-ui-library) Naive 버튼에 회색 hover가 덮임 | 전역 `button:hover`(0,2,1) > `.n-button`(0,2,0) | 우리 쪽을 `:where()`로 감싸 특이도 0 | `!important` 없이 공존 |
+| [**7**](#종합실습-7--날씨-ui-library) 한글 검색이 멈춤 | `n-input`이 조합 중 입력을 버림 | 검색창만 네이티브 `<input>` 유지 | 과제 1의 요구사항 3 유지 |
 
-앞 숫자는 과제 번호입니다.
+앞 숫자는 과제 번호이고, 누르면 해당 과제의 상세 설명으로 이동합니다.
 
 ---
 
 ## 과제 1 — 날씨 Mockup
 
-> [`src/components/exercise/WeatherMockup.vue`](src/components/exercise/WeatherMockup.vue)
+> [`src/components/exercise/WeatherMockup.vue`](src/components/exercise/WeatherMockup.vue) · [요구사항 충족 현황](#요구사항-충족-현황)
 
 도시별 날씨를 카드로 렌더링하고 검색·선택·상세보기를 붙인 목업입니다.
 
@@ -240,7 +247,7 @@ OpenWeatherMap 무료 플랜에 자외선 지수가 없어 Open-Meteo를 함께 
 
 ## 과제 2 — 날씨 Composition
 
-> [`src/components/exercise/WeatherComposition.vue`](src/components/exercise/WeatherComposition.vue)
+> [`src/components/exercise/WeatherComposition.vue`](src/components/exercise/WeatherComposition.vue) · [요구사항 충족 현황](#요구사항-충족-현황)
 
 과제 1과 **같은 화면**을 Composition API로 다시 짰습니다.
 
@@ -270,19 +277,17 @@ const displayList = computed(() => {
 })
 ```
 
-`sort()`는 원본을 바꾸는 메서드라 전개 연산자로 복사한 뒤 정렬합니다.
-`filteredWeatherList`를 직접 정렬하면 `weatherList` 원본 순서까지 망가집니다.
+`sort()`는 원본을 바꾸는 메서드라 복사한 뒤 정렬합니다. `filteredWeatherList`를 직접 정렬하면 `weatherList` 순서까지 망가집니다.
 정렬해도 카드가 깨지지 않는 건 과제 1의 `:key="city.id"` 덕분입니다 — Vue가 id로 기존 DOM을 알아보고 재사용합니다.
 
-통계 3종(`resultCount` `avgTemp` `hottestCity`)은 `displayList`에서 파생되므로 검색어를 바꾸면 함께 따라오고,
-빈 배열일 때 0으로 나누지 않도록 가드를 뒀습니다.
+통계 3종 `resultCount` `avgTemp` `hottestCity`는 `displayList`에서 파생되므로 검색어를 바꾸면 함께 따라오고,
 자외선 경보는 3번의 로그 `watch`와 **콜백 하나로 합쳤습니다** — 같은 `selectedCityInfo`를 보기 때문입니다.
 
 ---
 
 ## 과제 3 — 날씨 Component
 
-> [`src/components/exercise/weather/`](src/components/exercise/weather/)
+> [`src/components/exercise/weather/`](src/components/exercise/weather/) · [요구사항 충족 현황](#요구사항-충족-현황)
 
 과제 2 결과물은 300줄짜리 파일 하나에 상태·검색·통계·카드·스타일이 전부 들어 있었습니다.
 **기능은 하나도 바꾸지 않고** 같은 화면을 6개 컴포넌트로 나눴습니다.
@@ -308,17 +313,16 @@ const handleInput = (event) => emit('update-query', event.target.value)
 
 props/emits를 왕복해도 과제 1의 `:value` + `@input` 방식이 그대로라 한글 조합 중 입력이 즉시 반영됩니다.
 
+**5번 — 스타일 분배.**
+scoped 스타일은 그 컴포넌트가 소유한 엘리먼트에만 `data-v-xxxx`를 붙입니다.
+그래서 카드 CSS만 자식으로 옮기고 판정을 부모에 남겨 두면 클래스는 붙어도 색이 칠해지지 않습니다 → [막혔던 것](#막혔던-것).
+스타일을 옮기면 그 스타일이 쓰는 판단도 따라가야 합니다.
+
 **6번 — 슬롯은 부모의 스코프에서 컴파일됩니다.**
 `<BaseDashboardCard>` 안에 넣은 `<WeatherCard :city="city" @select-card="selectCity" />`는
 화면상 자식 안에 그려지지만, `:city`와 `@select-card`가 평가되는 곳은 `WeatherParent`의 스코프입니다.
 그래서 `BaseDashboardCard`는 props를 중계하거나 이벤트를 되쏘는 코드가 한 줄도 없이
 **테두리·여백·제목만 담당하는 껍데기**로 남습니다.
-
-**5번 — 스타일 분배.**
-과제 2에서는 날씨 테마 클래스를 부모 템플릿에서 판정했는데, 카드 CSS만 `WeatherCard.vue`의
-`<style scoped>`로 옮기니 **클래스는 붙는데 색이 칠해지지 않았습니다.**
-scoped 스타일은 그 컴포넌트가 소유한 엘리먼트에만 `data-v-xxxx`를 붙이기 때문입니다.
-판정 로직도 함께 자식으로 옮겨 해결했습니다 — 스타일을 옮기면 그 스타일이 쓰는 판단도 따라가야 합니다.
 
 **7번 — 추가 컴포넌트.**
 `WeatherSummary`와 `UvAlertBanner` 둘 다 **계산은 하지 않고 받아 그리기만** 합니다.
@@ -331,7 +335,7 @@ props / emits 규격은 그대로입니다.
 
 ## 과제 4 — 날씨 Router
 
-> [`src/router/exercise.js`](src/router/exercise.js) · [`src/views/weather/`](src/views/weather/)
+> [`src/router/exercise.js`](src/router/exercise.js) · [`src/views/weather/`](src/views/weather/) · [요구사항 충족 현황](#요구사항-충족-현황)
 
 과제 3까지 대시보드는 한 화면이었습니다. 이걸 주소로 이동하는 여러 페이지로 쪼갭니다.
 과제 3에서 만든 부품은 **복사하지 않고 그대로 재사용**합니다.
@@ -363,9 +367,8 @@ Catch-all(`/:pathMatch(.*)*`)은 **반드시 배열의 맨 마지막**에 둡니
 라우터는 배열을 위에서부터 훑어 첫 매칭에서 멈추므로, 위에 두면 `/about`조차 404로 잡아먹힙니다.
 
 **2번 — 라우터 블록은 하나만 둡니다.**
-`<RouterView />`는 현재 주소에 매칭된 화면이 끼워지는 자리입니다.
-과제가 늘어난다고 `<RouterView>`가 든 블록을 새로 만들면 **완전히 같은 화면이 두 번 그려집니다.**
-그래서 과제 4부터는 화면 블록이 하나로 이어지고, 과제가 바뀔 때마다 그 블록의 제목만 갈아 끼웠습니다.
+`<RouterView />`는 현재 주소에 매칭된 화면이 끼워지는 자리라 앱 전체에 하나뿐입니다 → [막혔던 것](#막혔던-것).
+과제 4부터는 화면 블록 하나를 두고 제목만 갈아 끼웠고,
 과제 1·2·3 블록은 라우터와 무관한 정적 화면이라 그대로 위에 쌓아 둡니다.
 
 **3번 — `alert` 대신 화면 이동.**
@@ -376,10 +379,19 @@ window.alert(`${city.name}의 …`)      router.push(`/weather/${city.id}`)
 ```
 
 사용자가 직접 누르는 링크는 `<RouterLink>`, 이벤트 핸들러 안에서 코드로 옮길 때는 `router.push`를 씁니다.
-경로 문자열 대신 이름(`{ name: 'weather-detail', params: { cityId } }`)으로도 이동할 수 있어
-나중에 경로가 바뀌어도 호출부는 그대로입니다.
+경로 문자열 대신 `{ name: 'weather-detail', params: { cityId } }` 형태의 이름으로도 이동할 수 있어 경로가 바뀌어도 호출부는 그대로입니다.
 
-**검색어를 URL에 얹기.** 새로고침해도 살아남고 링크로 공유할 수 있습니다.
+**4번 — 동적 경로.** `route.params.cityId`로 꺼내고, 조회는 `<script setup>` 본문이 아니라 `onMounted`에 뒀습니다.
+실제 서비스라면 이 자리에서 API를 호출하기 때문입니다.
+
+**5번 — 서비스 소개.** `/about`은 과제 1부터 종합실습 7까지 배운 것을 `n-timeline`으로 정리하고
+API 출처를 밝히는 정적 페이지입니다. 홈으로는 `router.push('/')`로 돌아옵니다.
+
+**6번 — 즐겨찾기.** 라우트를 이동하면 컴포넌트가 파괴되므로 별표 목록을 컴포넌트 안 `ref`에 두면 값이 사라집니다.
+모듈은 앱이 켜져 있는 동안 한 번만 평가되므로, 모듈 스코프 `ref`로 두면 어느 파일에서 `import` 하든 같은 객체를 가리킵니다.
+이 방식은 [종합실습 5](#종합실습-5--날씨-store)에서 Pinia 스토어로 대체됩니다.
+
+**추가 구현 — 검색어를 URL에 얹기.** 새로고침해도 살아남고 링크로 공유할 수 있습니다.
 
 ```js
 onMounted(() => { if (route.query.search) searchQuery.value = route.query.search })
@@ -387,15 +399,6 @@ watch(searchQuery, (q) => router.push({ path: route.path, query: { search: q || 
 ```
 
 `undefined`를 넣으면 그 키 자체가 URL에서 사라져 빈 `?search=`가 남지 않습니다.
-
-**4번 — 동적 경로.** `route.params.cityId`로 꺼내고, 조회는 `<script setup>` 본문이 아니라 `onMounted`에 뒀습니다.
-실제 서비스라면 이 자리에서 API를 호출하기 때문입니다.
-
-**6번 — 즐겨찾기.** 홈에서 누른 별표를 다른 라우트에서도 알아야 하는데,
-라우트를 이동하면 컴포넌트가 파괴되므로 `ref`를 컴포넌트 안에 두면 값이 사라집니다.
-모듈 스코프 `ref`로 해결했습니다 — 모듈은 앱이 켜져 있는 동안 한 번만 평가되므로
-어느 파일에서 `import` 하든 같은 객체를 가리킵니다.
-이 방식은 [종합실습 5](#종합실습-5--날씨-store)에서 Pinia 스토어로 대체됩니다.
 
 **과제 3 컴포넌트를 그대로 쓰기.**
 별표 버튼이 필요한 건 라우터 화면의 카드뿐이라 prop을 하나 더했는데, **기본값을 `false`로** 뒀습니다.
@@ -405,15 +408,14 @@ showFavorite: { type: Boolean, default: false },   // 기본 false → 과제 3 
 ```
 
 덕분에 같은 파일을 쓰면서도 과제 3 블록의 카드에는 별표가 나타나지 않습니다.
-`defineProps`의 기본값이 기존 화면을 지키는 안전장치로 쓰인 사례이고,
-종합실습 5의 `applyUnit`, 종합실습 6의 `themeKey ??`까지 같은 방식이 이어집니다.
+`defineProps`의 기본값을 기존 화면의 안전장치로 쓰는 이 방식은 종합실습 5의 `applyUnit`, 종합실습 6의 `themeKey ??`까지 이어집니다.
 → [과제 1 · 과제 3 결과물 화면](#과제-1--과제-3-결과물)
 
 ---
 
 ## 종합실습 5 — 날씨 Store
 
-> [`src/stores/`](src/stores/)
+> [`src/stores/`](src/stores/) · [요구사항 충족 현황](#요구사항-충족-현황)
 
 온도 단위(섭씨 / 화씨)를 **어느 화면에서 바꿔도 전부 함께 반응하는 전역 상태**로 만듭니다.
 
@@ -450,29 +452,18 @@ const toDisplayTemp = computed(
 
 변환 공식은 이 한 줄뿐이고, 각 컴포넌트는 슬라이드와 같은 모양의 computed를 유지합니다.
 
-**환산은 표시에만, 판정은 원본 섭씨로.**
-화씨로 바꿨다고 카드 색이나 `더움 / 선선함` 분류가 달라지면 안 됩니다.
-그래서 비교와 게이지 계산은 계속 `city.temp`(원본 섭씨)를 씁니다.
-대신 **문구 속 임계값도 함께 환산**해 `25°C 이상`이 `77°F 이상`으로 바뀝니다.
-숫자만 화씨로 바꾸고 기준을 섭씨로 남기면 "82°F인데 25도 이상"이라는 이상한 문장이 되기 때문입니다.
-→ [GIF](docs/clips/unit-toggle.gif)
+**환산은 표시에만, 판정은 원본 섭씨로** → [막혔던 것](#막혔던-것)
+비교와 게이지 계산은 계속 `city.temp` 원본 섭씨를 쓰고, 대신 **문구 속 임계값도 함께 환산**해
+`25°C 이상`이 `77°F 이상`으로 바뀝니다. 숫자만 화씨로 바꾸고 기준을 섭씨로 남기면
+"82°F인데 25도 이상"이라는 문장이 되기 때문입니다. → [GIF](docs/clips/unit-toggle.gif)
 
-과제 3 블록이 영향을 받지 않도록 과제 4의 `showFavorite`와 같은 방식(`applyUnit: { default: false }`)을 썼습니다.
-`WeatherParent.vue`는 종합실습 5에서 **한 글자도 수정하지 않았습니다.**
+과제 3 블록에는 과제 4와 같은 방식으로 `applyUnit: { default: false }`를 걸어 `WeatherParent.vue`를 손대지 않았습니다.
 
-**4번 ① 도시 비교함.**
-즐겨찾기를 Pinia로 옮기는 것만으로는 사용자 입장에서 새로 생긴 기능이 없어서,
-스토어가 없으면 만들기 어려운 기능을 하나 더했습니다. 이유는 셋입니다.
-
-*쓰는 화면과 읽는 화면이 라우트로 갈라져 있습니다.* 담는 곳은 홈·즐겨찾기·상세이고,
-보는 곳은 비교 트레이와 `/compare`입니다. 트레이는 `<RouterView>` **밖**에 있어 라우트가 바뀌어도 사라지지 않습니다.
-props/emit으로는 이 경로를 연결할 방법이 없습니다.
-
-*action에 규칙이 들어 있습니다.* '최대 3개'가 컴포넌트가 아니라 스토어 한 곳에 있어서,
-카드에서 담든 상세 페이지에서 담든 같은 규칙이 적용됩니다.
-
-*getters가 원본에 없는 값을 만듭니다.* `hottest` / `coldest` / `tempGap`은 데이터에 없는 값입니다.
-`configStore.toDisplayTemp`와도 맞물려 단위를 바꾸면 비교 표의 숫자가 함께 바뀝니다.
+**4번 ① 도시 비교함.** 스토어가 없으면 만들기 어려운 기능으로 골랐습니다.
+담는 곳은 홈·즐겨찾기·상세이고 보는 곳은 `/compare`와 비교 트레이인데, 트레이는 `<RouterView>` **밖**에 있어
+props/emit으로는 연결할 방법이 없습니다. '최대 3개' 규칙은 action 한 곳에 두어 어디서 담든 같게 적용되고,
+`hottest` / `coldest` / `tempGap`은 원본 데이터에 없는 값을 getters가 만들어 냅니다.
+`configStore.toDisplayTemp`와 맞물려 단위를 바꾸면 비교 표의 숫자도 함께 바뀝니다.
 
 > 즐겨찾기는 카드가 `emit`을 올리고 부모가 스토어에 전달하는 과제 3식 통신이고,
 > 비교함은 카드가 스토어를 직접 씁니다. 같은 카드 안에 두 방식이 나란히 있습니다.
@@ -487,18 +478,16 @@ devtools의 Pinia 탭에서 state 변화가 추적됩니다.
 
 ## 종합실습 6 — 날씨 Axios
 
-> [`src/api/`](src/api/) · [`src/stores/weatherStore.js`](src/stores/weatherStore.js)
+> [`src/api/`](src/api/) · [`src/stores/weatherStore.js`](src/stores/weatherStore.js) · [요구사항 충족 현황](#요구사항-충족-현황)
 
 종합실습 5까지 화면은 전부 Mock Data 위에서 돌아갔습니다. 그 Mock을 **실제 기상 API 응답으로 교체**합니다.
 
-| 용도 | 엔드포인트 | 키 | 호출 시점 |
-| --- | --- | --- | --- |
-| 현재 날씨 | `openweathermap.org/data/2.5/weather` | 필요 | 앱 진입 시 10건 |
-| 5일 예보 | `.../2.5/forecast` | 필요 | 상세 진입 시 1건 |
-| 대기 오염 | `.../2.5/air_pollution` | 필요 | 상세 진입 시 1건 |
-| 자외선 · 강수확률 | `api.open-meteo.com/v1/forecast` | **불필요** | 앱 진입 시 **1건** (10개 도시 동시) |
+엔드포인트는 [사용한 API](#사용한-api)에 있고, 호출 시점은 둘로 나뉩니다.
 
-> One Call 3.0(`/data/3.0/onecall`)은 별도 유료 구독이 필요해 401을 돌려줍니다. 쓰지 않았습니다.
+| 시점 | 호출 |
+| --- | --- |
+| 앱 진입 시 | 현재 날씨 10건 + 자외선·강수확률 **1건**(10개 도시 동시) |
+| 상세 진입 시 | 5일 예보 1건 + 대기 오염 1건 |
 
 **종합실습 5의 선택이 여기서 값을 합니다.**
 즐겨찾기와 비교함에 도시 객체가 아니라 **`id`만 저장**해 뒀기 때문에,
@@ -510,7 +499,6 @@ devtools의 Pinia 탭에서 state 변화가 추적됩니다.
 ```
 
 객체를 통째로 저장했다면 즐겨찾기에 담긴 도시만 옛 기온을 들고 있었을 겁니다.
-id는 출처가 바뀌어도 변하지 않는 값입니다.
 
 **인스턴스로 중복 없애기.**
 강사 예제는 뷰마다 `API_KEY`, `BASE_URL`, `?units=metric&lang=kr`을 복붙합니다.
@@ -529,9 +517,8 @@ export const fetchCurrentWeather = (lat, lon) => openWeather.get('/weather', { p
 그러면 단위를 누를 때마다 10건을 다시 호출해야 하고 종합실습 5에서 세운 "판정은 원본 섭씨로" 원칙도 깨집니다.
 지금 구조에서는 단위를 바꿔도 **네트워크 요청이 0건**입니다.
 
-**요구사항 3 — 왜 다른 회사의 API가 필요했나.**
-OpenWeatherMap 무료 플랜의 현재 날씨 응답에는 **자외선 지수가 없습니다.**
-과제 1부터 만들어 온 자외선 게이지와 배지가 갈 곳을 잃는다는 뜻입니다.
+**요구사항 3 — 왜 다른 회사의 API가 필요했나** → [막혔던 것](#막혔던-것)
+OpenWeatherMap 무료 플랜의 현재 날씨 응답에 자외선 지수가 없어, 과제 1부터 만들어 온 게이지와 배지가 갈 곳을 잃습니다.
 [Open-Meteo](https://open-meteo.com)는 가입도 API 키도 필요 없어 인스턴스에 `params`가 아예 없습니다.
 
 ```js
@@ -542,13 +529,11 @@ export const fetchUvBatch = (cities) =>
       latitude: cities.map((c) => c.lat).join(','),
       longitude: cities.map((c) => c.lon).join(','),
       current: 'uv_index,precipitation_probability',
-      timezone: 'Asia/Seoul',
     },
   })
 ```
 
-응답이 보낸 좌표 순서와 같은 배열이라 도시 10개의 자외선을 한 번에 받습니다.
-덤으로 따라온 강수확률은 카드와 비교 표에 새 항목으로 넣었습니다.
+응답이 보낸 좌표 순서와 같은 배열이라 도시 10개의 자외선을 한 번에 받고, 덤으로 따라온 강수확률은 카드와 비교 표에 새 항목으로 넣었습니다.
 
 **두 회사의 응답을 합치기 — `Promise.all` 이중 구조.**
 
@@ -559,22 +544,15 @@ const [owmResults, meteoRes] = await Promise.all([
 ])
 ```
 
-안쪽이 OpenWeatherMap 10건을 동시에 던지고, 바깥이 그 묶음과 Open-Meteo 1건을 다시 묶습니다.
-순차로 부르면 11번 왕복이지만 이렇게 하면 전체 대기 시간이 **가장 느린 하나**와 같습니다.
-합치는 일은 [`mapWeather.js`](src/api/mapWeather.js) 한 곳에 모아 두어
+안쪽이 OpenWeatherMap 10건을 동시에 던지고 바깥이 그 묶음과 Open-Meteo 1건을 다시 묶어, 순차로 부르면 11번인 왕복이
+**가장 느린 하나**의 대기 시간으로 끝납니다. 합치는 일은 [`mapWeather.js`](src/api/mapWeather.js) 한 곳에 모아 두어
 **컴포넌트는 `raw.main.temp` 같은 API 내부 구조를 전혀 모릅니다.**
 
-**요구사항 2 — 5일 예보의 UTC 함정.**
+**요구사항 2 — 5일 예보의 UTC 함정** → [막혔던 것](#막혔던-것)
 `/forecast`는 3시간 간격 40건을 주는데 응답의 `dt`가 **UTC**입니다.
 그대로 날짜를 자르면 한국 기준 경계가 9시간 밀리고, 정오 대표 아이콘을 고를 때
-UTC 12:00(= 한국 21:00)이 잡혀 밤 아이콘이 나옵니다.
-
-| | 수정 전 (UTC 기준) | 수정 후 (한국 시각) |
-| --- | --- | --- |
-| 일수 | 6일 | **5일** |
-| 대표 아이콘 | `10n` `04n` — 밤 | **`10d` `04d` — 낮** |
-
-응답의 `city.timezone`(초 단위 시차)을 더해 한국 시각으로 바꾼 뒤 묶어서 해결했습니다.
+UTC 12:00, 곧 한국 21:00이 잡혀 밤 아이콘이 나옵니다.
+응답의 `city.timezone` 초 단위 시차를 더해 한국 시각으로 바꾼 뒤 묶었습니다.
 → [상세 화면](docs/screenshots/detail.png)
 
 대기질은 AQI를 1–5 정수로만 주기 때문에 등급 문구와 색 배지를 붙이고,
@@ -592,32 +570,28 @@ PM10·PM2.5를 함께 표시했습니다. 상세 페이지의 두 API도 `Promis
 }
 ```
 
-`weatherMockData`를 지우지 않고 남겨 둔 이유가 여기 있습니다. 키가 만료되거나 오프라인이어도 화면이 비지 않습니다.
-잘못된 키로 빌드해 실제로 확인했습니다.
+`weatherMockData`를 남겨 둔 덕분에 키가 만료되거나 오프라인이어도 화면이 비지 않습니다. 잘못된 키로 빌드해 확인했습니다.
 `isLoading`을 `try` 끝에만 두면 에러가 났을 때 로딩 문구가 영원히 남기 때문에 `finally`에 뒀습니다.
 
 API 호출은 홈 뷰가 아니라 **앱 루트의 `onMounted`**에서 합니다.
 `/favorites`로 새로고침해 곧장 들어와도 데이터가 있어야 하고,
 `hasData` 검사 덕분에 라우트를 오갈 때마다 API를 다시 때리지 않기 때문입니다.
 
-**이전 과제 화면을 지키기.**
-Mock의 `status`는 `맑음 / 비 / 구름 / 폭염 / 바람` 5종 고정이었지만
-API가 주는 값은 `온흐림`, `실 비`, `튼구름`처럼 종류가 많고 예측할 수 없어서,
-`status === '맑음'`으로 테마를 고르던 코드가 통째로 무력해졌습니다.
-**아이콘 코드 앞 2자리**(`01`–`50`)로 판정하도록 바꾸고, `??`로 옛 판정을 남겨 뒀습니다.
+**이전 과제 화면을 지키기** → [막혔던 것](#막혔던-것)
+API의 `status`는 `온흐림`, `실 비`, `튼구름`처럼 Mock의 5종보다 종류가 많고 예측할 수 없습니다.
+**아이콘 코드 앞 2자리** `01`–`50`으로 판정하도록 바꾸고, `??`로 옛 판정을 남겨 뒀습니다.
 
 ```js
 const themeKey = computed(() => props.city.themeKey ?? THEME_BY_STATUS[props.city.status] ?? '')
 ```
 
-`themeKey`가 없으면(= 과제 1–3의 Mock 데이터) 예전 판정으로 되돌아갑니다.
-과제 4의 `showFavorite`, 종합실습 5의 `applyUnit`과 같은 방식으로 이번에도 상단 블록은 한 글자도 바뀌지 않았습니다.
+`themeKey`가 없는 과제 1–3의 Mock 데이터는 옛 판정으로 되돌아갑니다.
 
 ---
 
 ## 종합실습 7 — 날씨 UI Library
 
-> [`src/plugins/naive.js`](src/plugins/naive.js) · [`src/App.exercise.vue`](src/App.exercise.vue)
+> [`src/plugins/naive.js`](src/plugins/naive.js) · [`src/App.exercise.vue`](src/App.exercise.vue) · [요구사항 충족 현황](#요구사항-충족-현황)
 
 요구사항 4개 중 3개가 종합실습 6에서 이미 끝나 있어서, 종합실습 7은 **표현 계층만 바꾸는 과제**가 됐습니다.
 
@@ -630,20 +604,15 @@ const themeKey = computed(() => props.city.themeKey ?? THEME_BY_STATUS[props.cit
 | Element Plus / Ant Design Vue | 있음 | 있음 | 있음 (전역 스타일시트) |
 | PrimeVue / Vuetify | **없음** | **없음** | 있음 |
 
-갈림길은 `n-descriptions`와 `n-statistic`이었습니다.
-상세 페이지의 `기온 / 습도 / 풍속` 나열과 요약의 `평균 기온 / 최고 기온`이 정확히 그 두 컴포넌트의 모양입니다.
-PrimeVue의 DataTable은 정렬·필터가 내장이라 오히려 **과제 2에 `computed`로 직접 만든 검색·정렬을 지웁니다.**
-
-> 강의 예제 페이지(`practice.html`)의 Element Plus는 그대로 두었습니다.
-> 진입점이 분리돼 있어 과제 번들에는 섞이지 않습니다.
+상세 페이지의 `기온 / 습도 / 풍속` 나열과 요약의 `평균 기온 / 최고 기온`이 그 두 컴포넌트의 모양 그대로였습니다.
+반대로 PrimeVue의 DataTable은 정렬·필터가 내장이라 과제 2에 `computed`로 직접 만든 검색·정렬을 지웁니다.
 
 **전부 등록하지 않았습니다.** `app.use(naiveUi)`로 통째로 넣으면 안 쓰는 컴포넌트까지 번들에 들어갑니다.
 [`plugins/naive.js`](src/plugins/naive.js)에서 `create()`에 실제로 쓰는 것만 넘기고,
 같은 파일의 `themeOverrides`로 과제 1부터 종합실습 6까지 쓰던 포인트 컬러를 유지했습니다.
 
-앱은 `n-config-provider`(테마·한국어 로케일) → `n-global-style` → `n-message-provider` 순으로 감쌉니다.
-`useMessage()`는 provider 안쪽에서만 부를 수 있는데, 루트를 감싸 둔 덕분에
-`WeatherCard`처럼 깊이 있는 부품에서도 토스트를 띄웁니다.
+앱은 `n-config-provider` → `n-global-style` → `n-message-provider` 순으로 감쌉니다.
+`useMessage()`는 provider 안쪽에서만 부를 수 있어서, 루트를 감싸 둔 덕분에 `WeatherCard`처럼 깊이 있는 부품에서도 토스트를 띄웁니다.
 종합실습 5에는 비교 버튼을 비활성화만 해 뒀는데, 이제 **왜 안 되는지 알려 줍니다.**
 
 ```js
@@ -661,21 +630,20 @@ if (!isComparing.value && !compareStore.canAdd) {
 
 ### 부딪힌 것 셋
 
-**① 전역 CSS 특이도.** [`practice.css`](src/assets/practice.css)가 과제 1부터 `button`, `input`을
-태그 셀렉터로 잡고 있어서 라이브러리를 넣자마자 Naive 버튼 위에 회색 hover가 덮였습니다.
-`button:not(:disabled):hover`(0,2,1)가 `.n-button:hover`(0,2,0)을 이기기 때문입니다.
-`!important`로 맞서는 대신 우리 쪽을 `:where(...)`로 감싸 **특이도를 0으로 낮췄습니다.**
-순수 HTML인 과제 1–2 화면은 그대로 스타일을 받고, Naive 컴포넌트에는 더 이상 끼어들지 않습니다.
+**① 전역 CSS 특이도** → [막혔던 것](#막혔던-것)
+[`practice.css`](src/assets/practice.css)가 과제 1부터 `button`, `input`을 태그 셀렉터로 잡고 있었습니다.
+`!important`로 맞서는 대신 우리 쪽을 `:where(...)`로 감싸 특이도를 0으로 낮췄더니,
+순수 HTML인 과제 1–2 화면은 그대로 스타일을 받고 Naive 컴포넌트에는 끼어들지 않습니다.
 → [과제 1 화면](#과제-1--과제-3-결과물)
 
-**② 한글 IME — 여기만 라이브러리를 쓰지 않았습니다.** `n-input`은 조합 중 입력을 그대로 버립니다.
+**② 한글 IME — 여기만 라이브러리를 쓰지 않았습니다** → [막혔던 것](#막혔던-것)
+`n-input`은 조합 중 입력을 그대로 버립니다.
 
 ```js
 // naive-ui/es/input/src/Input.mjs
 if (isComposingRef.value) return
 ```
 
-바꿨다면 `서울`이 완성돼야 검색되어 과제 1의 요구사항 3이 깨집니다. 그래서
 [`SearchBar.vue`](src/components/exercise/weather/SearchBar.vue)만 네이티브 `<input>`을 유지하고
 Naive UI 톤의 스타일만 입혔습니다. → [GIF](docs/clips/search-ime.gif)
 
@@ -699,14 +667,14 @@ Naive UI 톤의 스타일만 입혔습니다. → [GIF](docs/clips/search-ime.gi
 
 **API 통신(`src/api/`) · 상태(`src/stores/`) · 라우팅(`src/router/`) · 각 뷰의 `<script setup>`은 변경 없음**이고,
 바뀐 것은 각 파일의 `<template>`과 `<style>`뿐입니다. 예외는 상세 뷰에 더한 AQI 색 매핑 한 줄입니다.
-`props` / `emits` 규격을 그대로 두었기 때문에 **과제 3 블록도 코드를 고치지 않고 함께 새 UI가 됐습니다.**
+`props` / `emits` 규격이 그대로라 과제 3 블록도 함께 새 UI가 됐습니다.
 → [과제 3 화면](#과제-1--과제-3-결과물)
 
 ---
 
 ## 종합실습 8 — 날씨 Deployment
 
-> [`vercel.json`](vercel.json) · [`vite.config.js`](vite.config.js)
+> [`vercel.json`](vercel.json) · [`vite.config.js`](vite.config.js) · [요구사항 충족 현황](#요구사항-충족-현황)
 
 로컬에서만 돌던 결과물을 Vercel에 올려 주소로 열 수 있게 했습니다. → **https://skala-vue-ruddy.vercel.app**
 
